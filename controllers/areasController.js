@@ -21,6 +21,8 @@ const getAllAreas = asyncHandler(async (req, res) => {
 
 const createArea = asyncHandler(async (req, res) => {
 
+    console.log(`Request body ${req.body}`);
+
     const {title, description, active } = req.body
 
     if ( !title || !description || !active ) {
@@ -35,7 +37,7 @@ const createArea = asyncHandler(async (req, res) => {
     const area = await Area.create(areaObject)
 
     if (area) { // Created 
-        return res.status(201).json({ message: 'New area created' })
+        return res.status(201).json({ message: `New area ${req.body.title} created` })
     } else {
         return res.status(400).json({ message: 'Invalid area data received' })
     }
@@ -49,7 +51,7 @@ const updateArea = asyncHandler(async (req, res) => {
 
     const {id, title, description, active } = req.body
 
-    if ( !id || !title || !description || !active || ! typeof active == 'boolean') {
+    if ( !id || !title || !active || ! typeof active == 'boolean') {
         return res.status(400).json({ message: "All fields must be supplied"});
     }
 

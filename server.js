@@ -22,6 +22,8 @@ app.use(cookieParser())
 app.use('/', express.static(path.join(__dirname, '.', 'public')))
 app.use('/', require('./routes/root'))
 app.use('/areas', require('./routes/areaRoutes'))
+app.use('/crops', require('./routes/cropRoutes'))
+app.use('/plantings', require('./routes/plantingRoutes'))
 
 // app.all('*', (req, res, next) => {
 //     res.status(404) //default status
