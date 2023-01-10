@@ -20,7 +20,7 @@ const getAllPlantings = asyncHandler( async (req, res) => {
     // See Promise.all with map(): https://youtu.be/4lqJBBEpjRE 
     const plantingsWithArea = await Promise.all(plantings.map(async (planting) => {
         const area = await Area.findById(planting.area).lean().exec()
-        return { ...planting, areatitle: area.title }
+        return { ...planting, areatitle: area.title}
     }))
 
     const plantingsWithAreaAndCrop = await Promise.all(plantingsWithArea.map(async (planting) => {
@@ -60,11 +60,15 @@ const createPlanting = asyncHandler( async ( req, res ) => {
         return res.status(400).json({ message: "At least season, area, & crop must be supplied"});
     }
 
+    const a = await Area.findOne({"_id":area}).lean().exec()
+    if(!a) {
+        return res.status(409).json(`Bad request. Area ${area} does not exist`)
+    }
+
     const c = await Crop.findOne({"_id":crop}).lean().exec()
     if(!c) {
-        return res.status(409).json("Bad request. Crop does not exist")
+        return res.status(409).json(`Bad request. Crop  ${crop} does not exist`)
     }
-    console.log( "Crop id:" + crop );
 
     const plantingObject = { season,
         area,
@@ -170,7 +174,6 @@ const updatePlanting = asyncHandler( async ( req, res ) => {
 
 })
 
-
 // @desc Delete a planting
 // @route DELETE plantings 
 // @access Private 
@@ -204,5 +207,6 @@ const deletePlanting = asyncHandler( async ( req, res ) => {
 module.exports = {
     getAllPlantings,
     createPlanting,
+    updatePlanting,
     deletePlanting
 }
